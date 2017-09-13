@@ -10,6 +10,7 @@ window.onload = function () {
     var widthInBlocks = canvasWidth / blockSize;
     var heightInBlocks = canvasHeight / blockSize;
     var score;
+    var timeout;
 
     init();
 
@@ -37,31 +38,32 @@ window.onload = function () {
         ctx.textBaseline = "middle";
         ctx.strokeStyle = "white";
         ctx.lineWidth = 5;
-        var centreX = canvasWidth/2;
-        var centreY = canvasHeight/2;
-        ctx.strokeText("Game Over", centreX, centreY-180);
-        ctx.fillText("Game Over", centreX, centreY-180);
+        var centreX = canvasWidth / 2;
+        var centreY = canvasHeight / 2;
+        ctx.strokeText("Game Over", centreX, centreY - 180);
+        ctx.fillText("Game Over", centreX, centreY - 180);
         ctx.font = "bold 30px sans-serif";
-        ctx.strokeText("Appuyer sur la touche Espace pour rejouer", centreX, centreY-120);
-        ctx.fillText("Appuyer sur la touche Espace pour rejouer", centreX, centreY-120);
+        ctx.strokeText("Appuyer sur la touche Espace pour rejouer", centreX, centreY - 120);
+        ctx.fillText("Appuyer sur la touche Espace pour rejouer", centreX, centreY - 120);
         ctx.restore();
     }
 
-    function restart(){
+    function restart() {
         snakee = new Snake([[6, 4], [5, 4], [4, 4], [3, 4], [2, 4]], "right");
         applee = new Apple([10, 10]);
         score = 0;
+        clearTimeout(timeout);
         refreshcanvas();
     }
 
-    function drawScore(){
+    function drawScore() {
         ctx.save();
         ctx.font = "bold 200px sans-serif";
         ctx.fillStyle = "gray";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        var centreX = canvasWidth/2;
-        var centreY = canvasHeight/2;
+        var centreX = canvasWidth / 2;
+        var centreY = canvasHeight / 2;
         ctx.fillText(score.toString(), centreX, centreY);
         ctx.restore();
     }
@@ -82,7 +84,7 @@ window.onload = function () {
             if (snakee.isEatingApple(applee)) {
                 score++;
                 snakee.ateApple = true;
-                //le serpent à mangé la pomme
+                //le serpent a mangé la pomme
                 do {
                     applee.setNewPosition();
                 } while (applee.isOnSnake(snakee))
@@ -91,7 +93,7 @@ window.onload = function () {
             drawScore();
             snakee.draw();
             applee.draw();
-            setTimeout(refreshcanvas, delay);
+            timeout = setTimeout(refreshcanvas, delay);
         }
     }
 
