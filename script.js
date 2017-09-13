@@ -6,6 +6,7 @@ window.onload = function () {
     var ctx;
     var delay = 100;
     var snakee;
+    var applee;
 
     init();
 
@@ -17,6 +18,7 @@ window.onload = function () {
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
+        applee = new Apple([10, 10]);
         refreshcanvas();
     }
 
@@ -31,10 +33,11 @@ window.onload = function () {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         snakee.advance();
         snakee.draw();
+        applee.draw();
         setTimeout(refreshcanvas, delay);
     }
 
-    function Snake(body,direction) {
+    function Snake(body, direction) {
         this.body = body;
         this.direction = direction;
         this.draw = function () {
@@ -47,7 +50,7 @@ window.onload = function () {
         };
         this.advance = function () {
             var nextPosition = this.body[0].slice();
-            switch (this.direction){
+            switch (this.direction) {
                 case "left":
                     nextPosition[0]--;
                     break;
@@ -66,31 +69,46 @@ window.onload = function () {
             this.body.unshift(nextPosition);
             this.body.pop();
         };
-        this.setDirection = function (newDirection){
+        this.setDirection = function (newDirection) {
             var allowedDirections;
-            switch(this.direction){
+            switch (this.direction) {
                 case "left":
                 case "right":
-                    allowedDirections = ["up","down"];
+                    allowedDirections = ["up", "down"];
                     break;
                 case "down":
                 case "up":
-                    allowedDirections = ["left","right"];
+                    allowedDirections = ["left", "right"];
                     break;
                 default:
                     throw ("Invalid Direction");
             }
-            if(allowedDirections.indexOf(newDirection) > -1){
+            if (allowedDirections.indexOf(newDirection) > -1) {
                 this.direction = newDirection;
             }
         };
+    }
+
+    function Apple(position) {
+        this.position = position;
+        this.draw = function () {
+            ctx.save();
+            ctx.fillStyle = "#33cc33";
+            ctx.beginPath();
+            var radius = blockSize / 2;
+            var x = position[0] * blockSize + radius;
+            var y = position[1] * blockSize + radius;
+            ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+            ctx.fill();
+            ctx.restore();
+        }
     }
 
     document.onkeydown = function handleKeyDown(e) {
         var key = e.keyCode;
         var newDirection;
 
-        switch(key){
+        switch (key) {
             //code de la touche de la flèche gauche
             case 37:
                 newDirection = "left";
